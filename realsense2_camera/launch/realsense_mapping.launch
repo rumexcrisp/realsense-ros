@@ -1,0 +1,61 @@
+<!--
+  Launch file to perform mapping using octomap with the realsense
+ -->
+<launch>
+  <!-- Add nodes to filter/limit Radar data before using it for mapping -->
+  <include file="$(find realsense2_camera)/launch/includes/realsense_limit_filters.launch" />
+
+  <!-- Create "raw" 3D map using first octomap node -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_raw" output="screen" >
+    <remap from="octomap_point_cloud_centers" to="raw_point_cloud_centers" />
+    <remap from="projected_map" to="raw_map" />
+    <remap from="cloud_in" to="realsense_xyz_filt_out" />
+    <param name="filter_ground" value="false" />
+    <param name="ground_filter/plane_distance" value="-0.05"/>
+    <param name="sensor_model/max_range" value="3.0"/>
+    <param name="sensor_model/hit" value="0.51"/>
+    <param name="sensor_model/miss" value="0.49"/>
+    <param name="sensor_model/min" value="0.1"/>
+    <param name="sensor_model/max" value="0.9"/>
+  </node>
+  
+  <!-- Perform SOR filtering on output from "raw" octomap node -->
+  <!-- <node pkg="nodelet" type="nodelet" name="mapping_ROR_filt_mapping" args="standalone pcl/RadiusOutlierRemoval" output="screen" >
+    <remap from="~input" to="raw_point_cloud_centers" />
+    <remap from="~output" to="mapping_ROR_filter_out" />
+    <param name="radius_search" value="0.2" />
+    <param name="min_neighbors" value="4" />
+  </node> -->
+
+  <node pkg="nodelet" type="nodelet" name="mapping_SOR_filt_mapping" args="standalone pcl/StatisticalOutlierRemoval" output="screen" >
+    <remap from="~input" to="raw_point_cloud_centers" />
+    <remap from="~output" to="mapping_SOR_filter_out" />
+    <param name="mean_k" value="20" />
+    <param name="stddev" value="0.05" />
+  </node>
+
+  <!-- <node pkg="nodelet" type="nodelet" name="mapping_SOR_filt_mapping" args="standalone pcl/StatisticalOutlierRemoval" output="screen" >
+    <remap from="~input" to="mapping_SOR_filter_out_tmp" />
+    <remap from="~output" to="mapping_SOR_filter_out" />
+    <param name="mean_k" value="2" />
+    <param name="stddev" value="0.04" />
+  </node> -->
+
+  <!-- <node pkg="nodelet" type="nodelet" name="mapping_VOXEL_filt_mapping" args="standalone pcl/VoxelGrid" output="screen" >
+    <remap from="~input" to="camera/depth/color/points" />
+    <remap from="~output" to="mapping_SOR_filter_out_2" />
+    <param name="leaf_size" value="0.1" />
+    <param name="filter_field_name" value="z" />
+  </node> -->
+  
+  <!-- Create "filtered" 3D map using second octomap node -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_filtered" output="screen" >
+    <remap from="octomap_point_cloud_centers" to="filtered_point_cloud_centers" />
+    <remap from="projected_map" to="filtered_map" />
+    <remap from="cloud_in" to="mapping_SOR_filter_out" />
+    <param name="filter_ground" value="false" />
+  </node>
+
+  <!-- <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server" /> -->
+  
+</launch>
