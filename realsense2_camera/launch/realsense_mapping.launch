@@ -3,7 +3,8 @@
  -->
 <launch>
   <!-- Add nodes to filter/limit Radar data before using it for mapping -->
-  <include file="$(find realsense2_camera)/launch/includes/realsense_limit_filters.launch" />
+  <arg name="filter" value="false"/>
+  <include file="$(find realsense2_camera)/launch/includes/realsense_limit_filters.launch" if="$(arg filter)"/>
 
   <!-- Create "raw" 3D map using first octomap node -->
   <node pkg="octomap_server" type="octomap_server_node" name="octomap_raw" output="screen" >

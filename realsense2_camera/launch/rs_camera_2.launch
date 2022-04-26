@@ -1,7 +1,5 @@
 <launch>
 
-  <!-- <include file="$(find realsense2_camera)/launch/includes/realsense_limit_filters.launch" /> -->
-
   <arg name="serial_no"           default=""/>
   <arg name="usb_port_id"         default=""/>
   <arg name="device_type"         default=""/>
