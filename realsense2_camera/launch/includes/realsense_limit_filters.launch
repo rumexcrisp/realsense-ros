@@ -3,6 +3,31 @@
  -->
 <launch>
 
+  <!-- <node pkg="nodelet" type="nodelet" name="mapping_VOXEL_filt_mapping_x" args="standalone pcl/VoxelGrid" output="screen" >
+    <remap from="~input" to="camera/depth/color/points" />
+    <remap from="~output" to="voxel_x" />
+    <rosparam>
+      filter_field_name: x
+      leaf_size: 0.1
+    </rosparam>
+  </node>
+  <node pkg="nodelet" type="nodelet" name="mapping_VOXEL_filt_mapping_y" args="standalone pcl/VoxelGrid" output="screen" >
+    <remap from="~input" to="camera/depth/color/points" />
+    <remap from="~output" to="voxel_y" />
+    <rosparam>
+      filter_field_name: y
+      leaf_size: 0.1
+    </rosparam>
+  </node>
+  <node pkg="nodelet" type="nodelet" name="mapping_VOXEL_filt_mapping_z" args="standalone pcl/VoxelGrid" output="screen" >
+    <remap from="~input" to="camera/depth/color/points" />
+    <remap from="~output" to="voxel_z" />
+    <rosparam>
+      filter_field_name: z
+      leaf_size: 0.1
+    </rosparam>
+  </node> -->
+
    <node pkg="nodelet" type="nodelet" name="realsense_pcl_manager" args="manager" output="screen"/>
    
    <node pkg="nodelet" type="nodelet" name="realsense_x_filt" args="load pcl/PassThrough realsense_pcl_manager" output="screen">
