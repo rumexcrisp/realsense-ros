@@ -155,4 +155,6 @@
 
   <node name="dynamic_reconfigure_load" pkg="dynamic_reconfigure" type="dynparam" args="set /camera/decimation filter_magnitude 8" />
 
+  <include file="$(find sensor_fusion)/launch/sensor_fusion.launch"/>
+
 </launch>
